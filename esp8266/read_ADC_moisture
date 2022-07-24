@@ -1,0 +1,37 @@
+/*
+ * read the capacitive soil moisture sensor
+ * through ADC on ESP8266
+ * Vcc = 5V
+ * 07/21/2022
+ */
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  float ADC_Value = analogRead (A0);
+  float temp = ADC_Value ; 
+  int moisture = (1024 - 93.5263 - temp) / 6.894737;  // this can be float.
+  Serial.println(ADC_Value);
+  Serial.println(moisture);
+  Serial.printf("ADC_Value is %f, moisture is %i\n", ADC_Value, moisture);
+
+  delay(1000);
+}
+
+
+/*
+ * ADC value range is 0 ~ 1024.
+ 
+status  ADC_Value complement  humidity
+ water    241       783         100%
+ air      634       390         43%
+ air      627                   44%
+
+ k1 = 783-6.894737*100 = 93.5263
+ k2 = (783-390)/(100-43) = 6.894737
+ 
+ */
