@@ -1,0 +1,18 @@
+#include <Servo.h>
+
+Servo myservo; // create servo object to control a servo
+
+void setup() {
+  // put your setup code here, to run once:
+  myservo.attach(2);  // attaches the servo on GIO2 to the servo object. so servo can directly connect to G/3V/D4, where D4 is GIO2.
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  int delay;
+  myservo.writeMicroseconds(1120);
+  delay(1000);                      // this time delay can be modified, even with a function
+  myservo.writeMicroseconds(1680);  // counter-clockwise
+  delay(250);                       // make key press short
+
+}
