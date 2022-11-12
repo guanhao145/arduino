@@ -1,0 +1,47 @@
+
+// 5V to run pump, 3.3V for control signal.
+//set all the motor control pins to outputs
+#define ENA 14 //left  motor
+#define IN1 5
+#define IN2 4
+
+void setup() 
+{  
+ 
+  pinMode(IN1,OUTPUT);
+  pinMode(IN2,OUTPUT);
+  pinMode(ENA,OUTPUT);//left  motor
+}
+void Motor(int left)
+{ //go forward or go back 
+       if (left <0){digitalWrite(IN1,LOW ); digitalWrite(IN2,HIGH);}
+  else if (left >0){digitalWrite(IN1,HIGH); digitalWrite(IN2,LOW );}
+  else             {digitalWrite(IN1,LOW ); digitalWrite(IN2,LOW );}
+  left  = abs(left );//Absolute left  speed
+  int potValue_left   = left;  // Read left
+  int pwmOutput_left  = map(potValue_left , 0, 100, 0 , 255); // Map the potentiometer value from 0 to 255
+ 
+  analogWrite(ENA, pwmOutput_left ); // Send PWM signal to L298N Enable pin 
+
+}
+
+void loop() 
+{  
+  Motor(50);
+  delay(1000);
+  Motor(100);
+  delay(1000);
+  Motor(0);
+  delay(1000);
+  
+
+  /*if ( Serial.available())
+    {
+    long spd = Serial.read(),t;int l,r,b;
+    l=(spd/1000 )%1000;r=spd%1000;    // ttttttblllrrr
+    b=(spd/1000000)%10;t=spd/10000000;// ttttttblllrrr
+    //spd=r+l*1000+b*1000000+t*10000000;
+    if('s' == Serial.read())
+    Motor_T(l,r,t,b);
+    Serial.println("Hello Raspberry,I am Arduino.");
+    */}
