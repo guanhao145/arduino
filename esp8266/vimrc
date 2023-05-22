@@ -1,0 +1,161 @@
+set nocompatible  " Use the vim's keyboard setting, not vi
+
+" Auto change line for Chinese chariters
+set textwidth=1000
+set nu
+colorscheme solarized
+
+" 语法高亮 ( which one??? )
+set syntax=on
+syntax enable
+
+" 去掉输入错误的提示声音
+set noeb
+" 在处理未保存或只读文件的时候，弹出确认
+set confirm
+
+" 自动缩进.这个导致从外面拷贝多行以空格开头的内容时,
+" 会有多的缩进,先不设置.
+"" set autoindent
+
+" 设置C风格的自动缩进.设置filetype indent on后,就会根据文件
+" 类型自动缩进.按照vim用户手册'30.3 Automatic indenting'的
+" 说明,可以不再单独设置cindent.
+"" set cindent
+
+" 输入Tab字符时,自动替换成空格
+set expandtab
+
+" 历史记录数
+set history=1000
+"禁止生成临时文件
+set nobackup
+set noswapfile
+
+" 设置默认进行大小写不敏感查找
+set ignorecase
+" 如果有一个大写字母，则切换到大小写敏感查找
+set smartcase 
+
+set tabstop=4           " tab=4
+set shiftwidth=4        " between lines, 4 spaces.
+set nobackup            " overwrite without backup
+set cursorline          " highlight current line
+
+highlight CursorLine	" check cursorline setting.
+highlight CursorLine cterm=underline guibg=Grey20	" guibg=grey20 has slight highligh line.
+set ruler                       " indicate cursor location
+"set smartindent                " indent based on previous line (**<u>turn on???</u>**)
+""set backspace=2                " backspace is delete
+set backspace=indent,eol,start		" 可以使用backspace 删除
+"set backspace=2 " same as ":set backspace=indent,eol,start" in vim7.4
+
+set showmatch           " match (, 高亮显示匹配的括号
+set guioptions-=T       " hide vim GUI toolbar
+set incsearch           " find match result while typing
+set hlsearch            " highlight search
+
+set whichwrap=b,s,<,>,[,]       " cursor can jump from line head or end to another
+
+" enable mouse makes vi/vim stuck here.
+" "set mouse=a                    " enable mouse
+set history=50          " set command history to 50. vim remember them
+set showmode            " command line show vim mode
+se wrap
+colo darkblue
+
+" 使用Tab键补全时,在状态栏显示匹配的列表,
+" 方便查看都有哪些命令符合补全条件.
+set wildmenu
+set laststatus=2
+" 侦测文件类型
+filetype on
+" 允许backspace和光标键跨越行边界 ??? different from prev "set whichwrap" ???
+set whichwrap+=<,>,h,l
+
+" 打开文件时，总是跳到退出之前的光标处
+
+``` vim
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\   exe "normal! g`\"" |
+\ endif
+set viminfo^=%
+```
+
+
+
+- **<u>optimization</u>**
+
+" 设置状态行显示的内容. %F: 显示当前文件的完整路径.
+" %r: 如果readonly,会显示[RO]
+" %B: 显示光标下字符的编码值,十六进制.
+" %l:光标所在的行号. %v:光标所在的虚拟列号.
+" %P: 显示当前内容在整个文件中的百分比.
+" %H和%M是strftime()函数的参数,获取时间.
+set statusline=%F%r\ [HEX=%B][%l,%v,%P]\ %{strftime(\"%H:%M\")}
+
+" 我的状态行显示的内容（包括文件类型和解码）
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
+
+" 1=启动显示状态行, 2=总是显示状态行.
+" 设置总是显示状态行,方便看到当前文件名.
+set laststatus=2
+
+" 命令行（在状态行下）的高度，默认为1，这里是2. useless.
+set cmdheight=2
+" 侦测文件类型
+filetype on
+
+" 允许backspace和光标键跨越行边界 ??? different from prev "set whichwrap" ???
+set whichwrap+=<,>,h,l
+
+" 默认按下Esc后,需要等待1秒才生效,
+" 设置Esc超时时间为100ms,尽快生效
+set ttimeout
+set ttimeoutlen=100
+
+" 设置文件编码,主要是避免中文乱码.
+" 先注释,后续遇到中文乱码再打开
+"" set fileencodings=utf-8,cp936,big5,latin1
+
+
+
+- **<u>testing</u>** 
+
+" Display tab and trail space
+set list
+set listchars=tab:>-,trail:.
+" Not display above list ( **<u>what is this ???</u>** )
+nmap <leader>l :set list!<CR>
+
+set foldmethod=indent  " The kind of folding used for the current window
+set foldlevel=99
+
+set nofoldenable
+
+set foldlevelstart=99
+#it will start editing any new file with all folds open.
+
+
+
+" Auto add head info
+" .py file auto add header
+function HeaderPython()
+    call setline(1, "#!/usr/bin/env python")
+    call append(1,  "# -*- coding: utf-8 -*-")
+    call append(2,  "# Tanky Woo @ " . strftime('%Y-%m-%d', localtime()))
+    normal G
+    normal o
+endf
+autocmd bufnewfile *.py call HeaderPython()
+
+" .sh file auto add header
+function HeaderBash()
+    call setline(1, "#!/bin/bash")
+    call append(1,  "# Tanky Woo @ " . strftime('%Y-%m-%d', localtime()))
+    normal G
+    normal o
+endf
+autocmd bufnewfile *.sh call HeaderBash()
